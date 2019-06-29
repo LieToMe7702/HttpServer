@@ -1,7 +1,5 @@
 package com.httpServer;
 
-import java.net.ServerSocket;
-
 public class App {
 
     private static int port = 8080;
@@ -14,8 +12,5 @@ public class App {
 
     }
 
-    /*private static void CreateSocket() {
-        ServerSocket socket = new ServerSocket(port);
-    }*/
 }
 
