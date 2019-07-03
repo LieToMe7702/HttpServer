@@ -8,6 +8,9 @@ import java.nio.charset.StandardCharsets;
 
 public class SimpleServer implements IServer {
 
+    IParser parser = new HttpRequestParser();
+
+    @Override
     public void run(int port) {
 
         try {
@@ -28,6 +31,7 @@ public class SimpleServer implements IServer {
                 var len = inputStream.available();
                 var buffer = new BufferedInputStream(inputStream).readNBytes(len);
                 var str = new String(buffer);
+                parser.parse(str);
                 System.out.println(str);
                 var outputStream = socket.getOutputStream();
                 var responseStr = "HTTP/1.0 404 Not found\r\n\r\n";
