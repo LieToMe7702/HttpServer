@@ -13,6 +13,6 @@ public abstract class AbstractHttpFuncHandler {
     }
     public abstract void parse(String url, String version);
     protected Map<String, String> paraDict = new HashMap<>();
-    protected String url = "";
+    protected String requestUrl = "";
 
 }

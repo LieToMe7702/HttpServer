@@ -2,8 +2,6 @@ package com.httpFunc;
 
 import com.struct.KeyValuePair;
 
-import java.util.HashMap;
-
 public class GetFuncHandler extends AbstractHttpFuncHandler {
     @Override
     public HttpFuncEnum getFuncName() {
@@ -25,14 +23,14 @@ public class GetFuncHandler extends AbstractHttpFuncHandler {
         System.out.println("GetFuncHandler");
     }
 
-    private void parseUrl(String urlStr) {
+    private void parseUrl(String url) {
 
-        var strs = urlStr.split(ParmPrefix);
+        var strs = url.split(ParmPrefix);
         var locate = strs[0];
         if (strs.length < 1) return;
 
         parseParas(strs[1]);
-        url = locate;
+        requestUrl = locate;
     }
 
 
