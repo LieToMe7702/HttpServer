@@ -1,16 +1,59 @@
 package com.httpFunc;
 
+import com.struct.KeyValuePair;
+
+import java.util.HashMap;
+
 public class GetFuncHandler extends AbstractHttpFuncHandler {
     @Override
     public HttpFuncEnum getFuncName() {
         return HttpFuncEnum.GET;
     }
 
+    private final String ParmPrefix = "\\?";
+    private final String ParmSplit = "&";
+    private final String KeyValueSplit = "=";
+
     @Override
-    public void handle(String url, String version) {
+    public void parse(String url, String version) {
+
+        parseUrl(url);
+
         System.out.println("GetFuncHandler");
         System.out.println(url);
         System.out.println(version);
         System.out.println("GetFuncHandler");
     }
+
+    private void parseUrl(String urlStr) {
+
+        var strs = urlStr.split(ParmPrefix);
+        var locate = strs[0];
+        if (strs.length < 1) return;
+
+        parseParas(strs[1]);
+        url = locate;
+    }
+
+
+    private void parseParas(String str) {
+        var paraStr = str;
+        var paras = paraStr.split(ParmSplit);
+
+
+        paraDict.clear();
+        for (var para : paras
+        ) {
+            var keyValue = parseKeyValuePara(para);
+            paraDict.putIfAbsent(keyValue.getKey(), keyValue.getValue());
+        }
+    }
+
+    private KeyValuePair parseKeyValuePara(String para) {
+        var paras = para.split(KeyValueSplit);
+        var res = new KeyValuePair(paras[0], paras[1]);
+        return res;
+    }
+
+
 }

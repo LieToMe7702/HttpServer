@@ -30,9 +30,8 @@ public class HttpRequestParser implements IParser {
     public void handleFirstLine(String line) {
         var strs = line.split(EMPTY);
         var funcName = strs[0];
-        boolean haveUrl = strs.length >= 3;
-        var url = haveUrl ? strs[1] : "";
-        var version = haveUrl ? strs[2] : strs[1];
+        var url = strs[1];
+        var version = strs[2];
         handleFunc(funcName, url, version);
     }
 
