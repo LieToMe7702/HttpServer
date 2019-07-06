@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.nio.charset.StandardCharsets;
 
-public class SimpleServer implements IServer {
-
-    IParser parser = new HttpRequestParser();
+public class SimpleServer extends AbstractServer {
 
     @Override
     public void run(int port) {
@@ -31,8 +29,10 @@ public class SimpleServer implements IServer {
                 var len = inputStream.available();
                 var buffer = new BufferedInputStream(inputStream).readNBytes(len);
                 var str = new String(buffer);
-                parser.parse(str);
+                getContexts().getRequestParser().parse(str);
+                var res = getContexts().getResponseParser().getContent();
                 System.out.println(str);
+                System.out.println(res);
                 var outputStream = socket.getOutputStream();
                 var responseStr = "HTTP/1.0 404 Not found\r\n\r\n";
                 var bytes = responseStr.getBytes(StandardCharsets.UTF_8);

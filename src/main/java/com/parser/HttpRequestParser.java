@@ -1,11 +1,17 @@
-package com.httpServer;
+package com.parser;
 
 import com.httpFunc.HttpFuncFactory;
+import com.struct.AbstractManager;
+import com.struct.Contexts;
 
-public class HttpRequestParser implements IParser {
+public class HttpRequestParser extends AbstractManager implements IParser {
 
     private String CRLF = "\r\n";
     private String EMPTY = " ";
+
+    public HttpRequestParser(Contexts newContexts) {
+        super(newContexts);
+    }
 
     @Override
     public void parse(String content) {
@@ -27,6 +33,7 @@ public class HttpRequestParser implements IParser {
         }
     }
 
+    @Override
     public void handleFirstLine(String line) {
         var strs = line.split(EMPTY);
         var funcName = strs[0];
@@ -35,11 +42,12 @@ public class HttpRequestParser implements IParser {
         handleFunc(funcName, url, version);
     }
 
+    @Override
     public void handleHeader(String header) {
 
     }
 
     private void handleFunc(String funcName, String url, String version) {
-        HttpFuncFactory.GetInstance().Handle(funcName, url, version);
+        getContexts().getHttpFuncFactory().Handle(funcName, url, version);
     }
 }

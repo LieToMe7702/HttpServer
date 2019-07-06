@@ -1,8 +1,13 @@
 package com.httpFunc;
 
+import com.struct.Contexts;
 import com.struct.KeyValuePair;
 
 public class GetFuncHandler extends AbstractHttpFuncHandler {
+    protected GetFuncHandler(Contexts newContexts) {
+        super(newContexts);
+    }
+
     @Override
     public HttpFuncEnum getFuncName() {
         return HttpFuncEnum.GET;
@@ -27,10 +32,11 @@ public class GetFuncHandler extends AbstractHttpFuncHandler {
 
         var strs = url.split(ParmPrefix);
         var locate = strs[0];
-        if (strs.length < 1) return;
+        requestUrl = locate;
+
+        if (strs.length <= 1) return;
 
         parseParas(strs[1]);
-        requestUrl = locate;
     }
 
 

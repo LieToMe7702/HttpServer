@@ -1,4 +1,4 @@
-package com.httpServer;
+package com.parser;
 
 public interface IParser {
 

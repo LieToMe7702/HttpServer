@@ -1,28 +1,26 @@
 package com.httpFunc;
 
+import com.struct.AbstractManager;
+import com.struct.Contexts;
+
 import java.util.HashMap;
 
-public class HttpFuncFactory {
-
-    private static HttpFuncFactory instance;
-
-    public static HttpFuncFactory GetInstance() {
-        if (instance == null) instance = new HttpFuncFactory();
-        return instance;
-    }
+public class HttpFuncFactory extends AbstractManager {
 
     public void Handle(String name, String url, String version) {
         var func = funcMap.get(name);
-        if (func != null)
+        if (func != null) {
             func.handle(url, version);
+        }
     }
 
-    private HttpFuncFactory() {
+    public HttpFuncFactory(Contexts newContexts) {
+        super(newContexts);
         RegisterFuncHandler();
     }
 
     private void RegisterFuncHandler() {
-        RegisterFuncHandler("GET", new GetFuncHandler());
+        RegisterFuncHandler("GET", new GetFuncHandler(getContexts()));
     }
 
     private void RegisterFuncHandler(String name, AbstractHttpFuncHandler handler) {
