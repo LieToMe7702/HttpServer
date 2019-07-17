@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 public class SimpleServer extends AbstractServer {
 
     @Override
-    public void run(int port) {
+    public void run(int port,String[] args) {
 
         try {
             var server = new ServerSocket(port);
@@ -39,6 +39,7 @@ public class SimpleServer extends AbstractServer {
                 var outData = new BufferedOutputStream(outputStream);
                 outData.write(bytes);
                 outData.close();
+                inputStream.close();
 
             } catch (IOException e) {
                 e.printStackTrace();

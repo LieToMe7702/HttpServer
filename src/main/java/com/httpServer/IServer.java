@@ -2,6 +2,6 @@ package com.httpServer;
 
 public interface IServer {
 
-    void run(int port);
+    void run(int port,String[] args);
 
 }
