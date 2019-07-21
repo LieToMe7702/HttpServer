@@ -1,16 +1,16 @@
 package com.parser;
 
-import com.httpFunc.HttpFuncFactory;
-import com.struct.AbstractManager;
-import com.struct.Contexts;
+import com.session.IHttpSession;
 
-public class HttpRequestParser extends AbstractManager implements IParser {
+public class HttpRequestParser implements IParser {
 
-    private String CRLF = "\r\n";
-    private String EMPTY = " ";
+    private final String CRLF = "\r\n";
+    private final String EMPTY = " ";
+    private final IHttpSession httpSession;
 
-    public HttpRequestParser(Contexts newContexts) {
-        super(newContexts);
+
+    public HttpRequestParser(IHttpSession session){
+        this.httpSession = session;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class HttpRequestParser extends AbstractManager implements IParser {
         var funcName = strs[0];
         var url = strs[1];
         var version = strs[2];
-        handleFunc(funcName, url, version);
+        httpSession.setHeaderInfo(funcName,url,version);
     }
 
     @Override
@@ -47,7 +47,4 @@ public class HttpRequestParser extends AbstractManager implements IParser {
 
     }
 
-    private void handleFunc(String funcName, String url, String version) {
-        getContexts().getHttpFuncFactory().Handle(funcName, url, version);
-    }
 }

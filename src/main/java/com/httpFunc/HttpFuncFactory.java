@@ -1,26 +1,33 @@
 package com.httpFunc;
 
-import com.struct.AbstractManager;
-import com.struct.Contexts;
+import com.response.Response;
+import com.session.HttpSession;
 
 import java.util.HashMap;
 
-public class HttpFuncFactory extends AbstractManager {
+public class HttpFuncFactory{
 
-    public void Handle(String name, String url, String version) {
+    private static HttpFuncFactory instance;
+    public static HttpFuncFactory GetInstane(){
+        if(instance == null){
+            instance = new HttpFuncFactory();
+        }
+        return instance;
+    }
+    public Response Handle(String name, String url, String version) {
         var func = funcMap.get(name);
         if (func != null) {
-            func.handle(url, version);
+            return func.handle(url, version);
         }
+        return new Response();
     }
 
-    public HttpFuncFactory(Contexts newContexts) {
-        super(newContexts);
+    private HttpFuncFactory() {
         RegisterFuncHandler();
     }
 
     private void RegisterFuncHandler() {
-        RegisterFuncHandler("GET", new GetFuncHandler(getContexts()));
+        RegisterFuncHandler("GET", new GetFuncHandler());
     }
 
     private void RegisterFuncHandler(String name, AbstractHttpFuncHandler handler) {
@@ -28,4 +35,10 @@ public class HttpFuncFactory extends AbstractManager {
     }
 
     private HashMap<String, AbstractHttpFuncHandler> funcMap = new HashMap<String, AbstractHttpFuncHandler>();
+
+    public Response Handle(HttpSession httpSession) {
+        var response = Handle(httpSession.getFuncName(),httpSession.getUrl(),httpSession.getVersion());
+        response.setFuncName(httpSession.getFuncName());
+        return response;
+    }
 }

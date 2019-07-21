@@ -1,12 +1,6 @@
 package com.parser;
 
-import com.struct.AbstractManager;
-import com.struct.Contexts;
-
-public class HttpResponseParser extends AbstractManager implements IResponseParser {
-    public HttpResponseParser(Contexts newContexts) {
-        super(newContexts);
-    }
+public class HttpResponseParser implements IResponseParser {
 
     @Override
     public void parse(String newContent) {

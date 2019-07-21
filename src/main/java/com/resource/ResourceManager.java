@@ -1,16 +1,11 @@
 package com.resource;
 
-import com.struct.AbstractManager;
-import com.struct.Contexts;
-import com.struct.IContexts;
-
 import java.io.File;
 import java.io.IOException;
 
-public class ResourceManager extends AbstractManager {
+public class ResourceManager {
 
-    public ResourceManager(Contexts contexts) {
-        super(contexts);
+    public ResourceManager() {
         initDictionaryPath();
     }
 

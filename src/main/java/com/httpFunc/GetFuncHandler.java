@@ -1,11 +1,9 @@
 package com.httpFunc;
 
-import com.struct.Contexts;
 import com.struct.KeyValuePair;
 
 public class GetFuncHandler extends AbstractHttpFuncHandler {
-    protected GetFuncHandler(Contexts newContexts) {
-        super(newContexts);
+    protected GetFuncHandler() {
     }
 
     @Override
@@ -34,7 +32,9 @@ public class GetFuncHandler extends AbstractHttpFuncHandler {
         var locate = strs[0];
         requestUrl = locate;
 
-        if (strs.length <= 1) return;
+        if (strs.length <= 1) {
+            return;
+        }
 
         parseParas(strs[1]);
     }
