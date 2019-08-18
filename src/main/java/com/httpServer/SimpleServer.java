@@ -10,7 +10,7 @@ public class SimpleServer extends AbstractServer {
 
         try {
             var server = new ServerSocket(port);
-            var serverRunner = new ServerRunner(server);
+            var serverRunner = new MultiThreadingServerRunner(server);
             serverRunner.exec();
 
         } catch (IOException e) {

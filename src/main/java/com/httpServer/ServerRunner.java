@@ -1,31 +1,22 @@
 package com.httpServer;
 
-import com.session.HttpSession;
+import com.session.HttpSessionRunner;
 
-import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
-public class ServerRunner {
-    private ServerSocket mySocket;
-    public ServerRunner(ServerSocket socket)
-    {
-        mySocket = socket;
+public class ServerRunner extends AbstractServerRunner {
+
+    protected ServerRunner(ServerSocket socket) {
+        super(socket);
     }
-    public void exec(){
-        while (!mySocket.isClosed()) {
-            try {
-                var socket = mySocket.accept();
-                var inputStream = socket.getInputStream();
-                var outputStream = socket.getOutputStream();
-                var httpSession = new HttpSession(inputStream, outputStream,socket);
-                while(!socket.isClosed()) {
-                    httpSession.exec();
-                }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    @Override
+    protected void dealSocket(Socket socket) {
 
-        }
+        HttpSessionRunner.defaultRunSession(socket);
+
     }
+
+
 }
