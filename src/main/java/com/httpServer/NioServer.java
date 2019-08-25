@@ -11,6 +11,8 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 public class NioServer extends AbstractServer {
+    private Selector selector;
+
     @Override
     public void run(int port, String[] args) {
         try {
@@ -19,7 +21,7 @@ public class NioServer extends AbstractServer {
             var socket = socketChannel.socket();
             var address = new InetSocketAddress(port);
             socket.bind(address);
-            var selector = Selector.open();
+            selector = Selector.open();
             socketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             dealSelector(selector);
@@ -41,15 +43,11 @@ public class NioServer extends AbstractServer {
                 var iterator = selectedKeys.iterator();
                 while (iterator.hasNext()) {
                     var it = iterator.next();
-                    if ((it.readyOps() & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) {
-                        var serverSocketChannel = (ServerSocketChannel) it.channel();
-                        var socketChannel = serverSocketChannel.accept();
-                        socketChannel.configureBlocking(false);
-                        socketChannel.register(selector, SelectionKey.OP_READ);
-                        iterator.remove();
-                    } else if ((it.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
+                    iterator.remove();
+                    if (it.isAcceptable()) {
+                        accept(it);
+                    } else if (it.isReadable()) {
                         read(it);
-
                     }
                 }
 
@@ -60,10 +58,24 @@ public class NioServer extends AbstractServer {
         }
     }
 
+    private void accept(SelectionKey key) {
+        try {
+            var serverSocketChannel = (ServerSocketChannel) key.channel();
+            var socketChannel = serverSocketChannel.accept();
+            socketChannel.configureBlocking(false);
+            socketChannel.register(selector, SelectionKey.OP_READ);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            key.cancel();
+        }
+
+    }
+
     ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
 
     private void read(SelectionKey key) throws IOException {
-        int numRead = 0;
+        int numRead;
         var socketChannel = (SocketChannel) key.channel();
         byteBuffer.clear();
         try {
@@ -73,7 +85,7 @@ public class NioServer extends AbstractServer {
                 key.cancel();
                 return;
             }
-            NioHttpSessionRunner.defaultRunSession(socketChannel,byteBuffer,numRead);
+            NioHttpSessionRunner.defaultRunSession(socketChannel, byteBuffer, numRead);
 
         } catch (Exception e) {
             e.printStackTrace();
