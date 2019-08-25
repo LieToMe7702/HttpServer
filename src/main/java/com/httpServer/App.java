@@ -6,7 +6,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        IServer server = new SimpleServer();
+        IServer server = new NioServer();
         server.run(port,args);
         System.out.println("Hello world!");
 

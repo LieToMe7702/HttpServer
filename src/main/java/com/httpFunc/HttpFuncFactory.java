@@ -1,7 +1,7 @@
 package com.httpFunc;
 
 import com.response.Response;
-import com.session.HttpSession;
+import com.session.IHttpSession;
 
 import java.util.HashMap;
 
@@ -36,7 +36,7 @@ public class HttpFuncFactory{
 
     private HashMap<String, AbstractHttpFuncHandler> funcMap = new HashMap<String, AbstractHttpFuncHandler>();
 
-    public Response Handle(HttpSession httpSession) {
+    public Response Handle(IHttpSession httpSession) {
         var response = Handle(httpSession.getFuncName(),httpSession.getUrl(),httpSession.getVersion());
         response.setFuncName(httpSession.getFuncName());
         return response;

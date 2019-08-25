@@ -63,15 +63,15 @@ public class HttpSession implements IHttpSession{
         this.url = url;
         this.version = version;
     }
-
+    @Override
     public String getFuncName() {
         return funcName;
     }
-
+    @Override
     public String getUrl() {
         return url;
     }
-
+    @Override
     public String getVersion() {
         return version;
     }
