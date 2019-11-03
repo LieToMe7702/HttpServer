@@ -14,36 +14,54 @@ public class RedisManager {
     private static String ADDR = "127.0.0.1";
     private static final int PORT = 6379;
     private static JedisPool jedisPool = null;
+
     static {
-        try{
+        try {
             var config = new JedisPoolConfig();
             config.setMaxTotal(MAX_TOTAL);
             config.setMaxIdle(MAX_IDLE);
             config.setMaxWaitMillis(MAX_WAIT_MILLIS);
             config.setTestOnBorrow(TEST_ON_BORROW);
-            jedisPool = new JedisPool(config,ADDR,PORT,TIME_OUT);
-        }catch (Exception e){
+            jedisPool = new JedisPool(config, ADDR, PORT, TIME_OUT);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public synchronized static Jedis getJedis(){
-        try {
-            if(jedisPool != null){
-                Jedis jedis = jedisPool.getResource();
-                return jedis;
-            }else{
-                return null;
-            }
+    public synchronized static Jedis getJedis() {
+        if (jedisPool == null) {
+            return null;
+        }
+        try (var jedis = jedisPool.getResource()) {
+            return jedis;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public static void returnResource(final Jedis jedis){
-        if(jedis!=null){
-            jedisPool.returnResource(jedis);
+
+    public static String getCacheByAddress(String address) {
+        try  {
+            var jedis = getJedis();
+            var res = jedis.get(address);
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static final String NXXX = "NX";
+    private static final String EXPX = "PX";
+    private static final long time = 1000 * 1 * 60;
+
+    public static void setCacheByAddress(String content, String address) {
+        try (var jedis = getJedis()) {
+            var res = jedis.set(address, content, NXXX, EXPX, time);
+            System.out.println("setCacheByAddress" + res);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

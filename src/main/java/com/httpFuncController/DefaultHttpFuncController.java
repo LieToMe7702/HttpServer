@@ -1,6 +1,7 @@
 package com.httpFuncController;
 
 import com.httpFunc.HttpFuncEnum;
+import com.redis.RedisManager;
 import com.resource.HttpStatus;
 import com.resource.ResourceManager;
 import com.response.Response;
@@ -22,8 +23,17 @@ public class DefaultHttpFuncController extends AbstractHttpFuncController {
 
     @Override
     protected Response handle(Map<String, String> paraDict) {
-        var file = resourceManager.getResource(url);
+        var res = RedisManager.getCacheByAddress(url);
+        var needUpdate = res == null || res.isEmpty();
         Response response = new Response();
+
+        if(!needUpdate) {
+            response.setContent(res);
+            response.setStatus(HttpStatus.GetStatusByStatus(200));
+            return response;
+        }
+
+        var file = resourceManager.getResource(url);
         try {
             var inputStream = new FileInputStream(file);
             var len = inputStream.available();
@@ -31,6 +41,7 @@ public class DefaultHttpFuncController extends AbstractHttpFuncController {
             var str = new String(buffer);
             response.setContent(str);
             response.setStatus(HttpStatus.GetStatusByStatus(200));
+            RedisManager.setCacheByAddress(str,url);
             return response;
 
 
